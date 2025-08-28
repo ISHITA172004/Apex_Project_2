@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Form with Validation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #a8edea, #fed6e3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .contact-form {
+      background: #ffffffcc;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      width: 360px;
+      backdrop-filter: blur(6px);
+    }
+
+    .contact-form h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #ff4081;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      outline: none;
+      transition: 0.3s;
+      background: #f9f9ff;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #ff4081;
+      box-shadow: 0 0 6px rgba(255, 64, 129, 0.5);
+      background: #fff;
+    }
+
+    textarea {
+      resize: none;
+      height: 100px;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .invalid {
+      border: 1px solid red !important;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(45deg, #ff4081, #ff6f61);
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .submit-btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(45deg, #ff6f61, #ff4081);
+    }
+  </style>
+</head>
+<body>
+  <form class="contact-form" id="contactForm" novalidate>
+    <h2>Contact Us</h2>
+
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" placeholder="Enter your name">
+      <div class="error" id="nameError"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email">
+      <div class="error" id="emailError"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" placeholder="Write your message here..."></textarea>
+      <div class="error" id="messageError"></div>
+    </div>
+
+    <button type="submit" class="submit-btn">Send Message</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("contactForm");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault(); // Stop form submission
+
+      const name = document.getElementById("name");
+      const email = document.getElementById("email");
+      const message = document.getElementById("message");
+
+      const nameError = document.getElementById("nameError");
+      const emailError = document.getElementById("emailError");
+      const messageError = document.getElementById("messageError");
+
+      // Reset errors
+      nameError.textContent = "";
+      emailError.textContent = "";
+      messageError.textContent = "";
+
+      name.classList.remove("invalid");
+      email.classList.remove("invalid");
+      message.classList.remove("invalid");
+
+      let valid = true;
+
+      // Name validation
+      if (name.value.trim() === "") {
+        nameError.textContent = "Name is required";
+        name.classList.add("invalid");
+        valid = false;
+      }
+
+      // Email validation
+      const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+      if (email.value.trim() === "") {
+        emailError.textContent = "Email is required";
+        email.classList.add("invalid");
+        valid = false;
+      } else if (!email.value.match(emailPattern)) {
+        emailError.textContent = "Please enter a valid email address";
+        email.classList.add("invalid");
+        valid = false;
+      }
+
+      // Message validation
+      if (message.value.trim() === "") {
+        messageError.textContent = "Message is required";
+        message.classList.add("invalid");
+        valid = false;
+      }
+
+      // If valid, success message
+      if (valid) {
+        alert("Form submitted successfully!");
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>
