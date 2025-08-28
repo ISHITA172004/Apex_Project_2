@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Professional Layout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #f9fafb;
+            /* light gray background */
+            color: #374151;
+            /* neutral gray text */
+            line-height: 1.6;
+        }
+
+        /* Navigation - Flexbox */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #060691;
+            /* standard blue */
+            padding: 1rem 2rem;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        nav ul li {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        nav ul li:hover {
+            color: #93c5fd;
+            /* lighter blue */
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #4a79df, #4266db);
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        /* Content Layout - Grid */
+        .container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+
+        .content,
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .content h2,
+        .sidebar h2 {
+            margin-bottom: 1rem;
+            color: #2563eb;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            background: #1e40af;
+            /* darker blue */
+            color: white;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            nav ul {
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            nav ul li {
+                padding: 0.5rem 0;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav>
+        <h2>My Website</h2>
+        <ul>
+            <li>Home</li>
+            <li>About</li>
+            <li>Services</li>
+            <li>Contact</li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Responsive Web Layout with Flexbox & CSS Grid</h1>
+
+        <p>
+            Designed with responsiveness in mind, ensuring seamless adaptability across desktops, tablets, and mobile
+            devices.
+        </p>
+    </section>
+
+    <!-- Content Area -->
+    <div class="container">
+        <div class="content">
+            <h2>Responsive Layout Design</h2>
+            <p>
+                This section demonstrates how Flexbox and CSS Grid work together to create layouts that automatically
+                adjust to different screen sizes, ensuring an optimal viewing experience on desktops, tablets, and
+                mobile devices.
+            </p>
+
+        </div>
+
+        <div class="sidebar">
+           <h2>About This Project</h2>
+<p>
+This sidebar demonstrates how additional details, resources, or useful links can be integrated into a responsive design for professional presentation.
+</p>
+
+<ul>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox" target="_blank">Learn Flexbox</a></li>
+  <li><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Grid_Layout" target="_blank">Learn CSS Grid</a></li>
+  <li><a href="https://www.w3schools.com/css/" target="_blank">CSS Documentation</a></li>
+  <li><a href="https://responsivedesign.is/" target="_blank">Responsive Design Guide</a></li>
+</ul>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+       <p>&copy; 2025 Responsive Layout Project. All rights reserved.</p>
+
+    </footer>
+</body>
+
+</html>
