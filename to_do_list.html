@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dynamic To-Do List</title>
+  <style>
+    /* --- Base / Layout --- */
+    :root{
+      --primary:#12b764;      /* blue (standard professional) */
+      --primary-dark:#8c1eb8;
+      --bg:#f9fafb;           /* light gray background */
+      --text:#495971;         /* neutral gray text */
+      --card:#ffffff;         /* white card */
+      --muted:#6b7280;        /* muted gray */
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    header{
+      background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+      color:#fff;
+      padding:2.25rem 1rem;
+      text-align:center;
+    }
+    header h1{margin:0 0 .5rem;font-size:clamp(1.5rem,2.2vw,2.2rem)}
+    header p{margin:0;opacity:.9}
+
+    .container{
+      max-width:760px;
+      margin:-1.25rem auto 3rem; /* slight overlap with header for depth */
+      padding:0 1rem;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:14px;
+      box-shadow:0 8px 24px rgba(0,0,0,.06);
+      padding:1.25rem;
+    }
+
+    /* --- Input Row --- */
+    .input-row{
+      display:flex;
+      gap:.75rem;
+      align-items:center;
+      margin-bottom:1rem;
+    }
+    .input-row input{
+      flex:1;
+      padding:.85rem .95rem;
+      border:1px solid #e5e7eb;
+      border-radius:10px;
+      font-size:1rem;
+      outline:none;
+    }
+    .input-row input:focus{
+      border-color:var(--primary);
+      box-shadow:0 0 0 3px rgba(30, 219, 178, 0.15);
+    }
+    .btn{
+      border:0;
+      background:var(--primary);
+      color:#fff;
+      padding:.85rem 1.1rem;
+      border-radius:10px;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform .05s ease, opacity .2s ease, background .2s ease;
+    }
+    .btn:hover{opacity:.95}
+    .btn:active{transform:translateY(1px)}
+    .btn[disabled]{opacity:.6;cursor:not-allowed}
+
+    /* --- List --- */
+    ul#todoList{
+      list-style:none;
+      margin:0;
+      padding:0;
+    }
+    .item{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:.75rem;
+      padding:.85rem;
+      border:1px solid #eef2f7;
+      border-radius:10px;
+      margin:.5rem 0;
+      transition:background .2s ease, border-color .2s ease;
+    }
+    .item:hover{background:#f8fafc;border-color:#e5e7eb}
+    .task{
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+      flex:1;
+      overflow:hidden;
+    }
+    .task input[type="checkbox"]{
+      width:1.1rem;height:1.1rem;cursor:pointer;
+      accent-color:var(--primary);
+    }
+    .task label{
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+      cursor:pointer;
+    }
+    .task.completed label{
+      text-decoration:line-through;
+      color:var(--muted);
+    }
+    .actions{
+      display:flex; gap:.4rem; flex-shrink:0;
+    }
+    .icon-btn{
+      border:1px solid #e5e7eb;
+      background:#fff;
+      padding:.45rem .6rem;
+      border-radius:8px;
+      cursor:pointer;
+      transition:background .2s ease, transform .05s ease;
+      font-size:.9rem;
+    }
+    .icon-btn:hover{background:#f3f4f6}
+    .icon-btn:active{transform:translateY(1px)}
+    .icon-danger{color:#b91c1c;border-color:#f1d2d2}
+    .empty{
+      text-align:center;
+      color:var(--muted);
+      padding:1rem .5rem;
+    }
+
+    /* --- Small screens --- */
+    @media (max-width:640px){
+      .input-row{flex-direction:column; align-items:stretch}
+      .btn{width:100%}
+    }
+
+    footer{
+      text-align:center;
+      color:var(--muted);
+      font-size:.9rem;
+      padding:1.25rem 1rem 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Dynamic To-Do List</h1>
+    <p>Built to practice JavaScript DOM manipulation: add, complete, and remove tasks.</p>
+  </header>
+
+  <main class="container">
+    <section class="card" aria-labelledby="todoHeading">
+      <h2 id="todoHeading" style="margin:.25rem 0 1rem;">Tasks</h2>
+
+      <!-- Input Row -->
+      <div class="input-row">
+        <input id="taskInput" type="text" placeholder="Type a task and press Enter…" aria-label="Task name" />
+        <button id="addBtn" class="btn" aria-label="Add task">Add Task</button>
+      </div>
+
+      <!-- To-Do List -->
+      <ul id="todoList" aria-live="polite">
+        <!-- Items will be injected here -->
+      </ul>
+
+      <p id="emptyState" class="empty">No tasks yet. Add your first task above.</p>
+    </section>
+  </main>
+
+  <footer>
+<p>&copy; 2025 Dynamic To-Do List | Built using HTML, CSS, and JavaScript.</p>
+
+  </footer>
+
+  <script>
+    // --- Elements
+    const input = document.getElementById('taskInput');
+    const addBtn = document.getElementById('addBtn');
+    const list = document.getElementById('todoList');
+    const emptyState = document.getElementById('emptyState');
+
+    // --- Helpers
+    function setEmptyState(){
+      emptyState.style.display = list.children.length ? 'none' : 'block';
+    }
+
+    function createItem(text){
+      const li = document.createElement('li');
+      li.className = 'item';
+
+      const taskWrap = document.createElement('div');
+      taskWrap.className = 'task';
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.setAttribute('aria-label', 'Mark task complete');
+
+      const label = document.createElement('label');
+      label.textContent = text;
+
+      taskWrap.appendChild(checkbox);
+      taskWrap.appendChild(label);
+
+      const actions = document.createElement('div');
+      actions.className = 'actions';
+
+      // Remove button
+      const del = document.createElement('button');
+      del.className = 'icon-btn icon-danger';
+      del.title = 'Delete task';
+      del.textContent = 'Delete';
+
+      actions.appendChild(del);
+
+      li.appendChild(taskWrap);
+      li.appendChild(actions);
+      return li;
+    }
+
+    function addTask(){
+      const text = input.value.trim();
+      if(!text) return;
+      list.appendChild(createItem(text));
+      input.value = '';
+      input.focus();
+      setEmptyState();
+    }
+
+    // --- Events
+    addBtn.addEventListener('click', addTask);
+    input.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter') addTask();
+    });
+
+    // Event delegation for list (complete & delete)
+    list.addEventListener('click', (e)=>{
+      const target = e.target;
+
+      // Delete
+      if(target.matches('.icon-btn.icon-danger')){
+        const li = target.closest('.item');
+        li?.remove();
+        setEmptyState();
+        return;
+      }
+
+      // Toggle complete (when clicking checkbox OR label)
+      if(target.matches('input[type="checkbox"]') || target.tagName === 'LABEL'){
+        const li = target.closest('.item');
+        const task = li.querySelector('.task');
+        const checkbox = li.querySelector('input[type="checkbox"]');
+        const isDone = target.tagName === 'LABEL' ? !checkbox.checked : checkbox.checked;
+        task.classList.toggle('completed', isDone);
+        if(target.tagName === 'LABEL') checkbox.checked = isDone; // sync label click
+      }
+    });
+
+    // Init
+    setEmptyState();
+  </script>
+</body>
+</html>
